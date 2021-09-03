@@ -1,9 +1,13 @@
 const container = document.querySelector(".container");
 const widthSelect = document.querySelector("select[name='width']");
 const heightSelect = document.querySelector("select[name='height']");
+const containerControls = document.querySelectorAll("select[for='container']");
+const boxes = document.querySelector("input[name='boxes']");
+
+const defualtBoxCount = 3;
 
 /** The number of boxes there were prior to the latest change in the number of boxes */
-let prev = 3;
+let prev = boxes.value;
 
 //info ############################################## Functions ##############################################
 
@@ -52,12 +56,27 @@ function setFlexProperty() {
 	container.style[this.name] = this.value;
 }
 
+/**
+ * Reset all the inputs and the display container
+ */
+function reset() {
+	widthSelect.value = widthSelect.children[0].value;
+	heightSelect.value = heightSelect.children[0].value;
+	prev = defualtBoxCount;
+	boxes.value = defualtBoxCount;
+	for (const select of containerControls) {
+		select.value = select.children[0].value;
+		container.style = "";
+	}
+	populateContainer(prev);
+}
+
 //info ########################################### Event Listeners ###########################################
 
 widthSelect.addEventListener("change", function() { setDimension("width", this.value) })
 heightSelect.addEventListener("change", function() { setDimension("height", this.value) })
 
-document.querySelector("input[name='boxes']").addEventListener("change", function() {
+boxes.addEventListener("change", function() {
 	if (this.value > 20 || this.value < 1 || isNaN(this.value))
 		this.value = prev;
 	else {
@@ -66,10 +85,17 @@ document.querySelector("input[name='boxes']").addEventListener("change", functio
 	}
 })
 
-for (let select of document.querySelectorAll("select[for='container']")) {
+for (const select of containerControls) {
 	select.addEventListener("change", setFlexProperty);
 }
 
+document.querySelector("#reset").addEventListener("click", reset);
+
 //info ########################################### Run on page load ##########################################
 
+for (const select of containerControls) {
+	if (select.value !== select.children[0].value) {
+		container.style[select.name] = select.value;
+	}
+}
 populateContainer(prev);
