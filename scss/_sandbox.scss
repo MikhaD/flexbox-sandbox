@@ -1,0 +1,24 @@
+.sandbox {
+	position: relative;
+	border: var(--sandbox-border);
+	border-radius: var(--sandbox-br);
+	display: flex;
+	overflow: auto;
+	height: 95vmin;
+	align-self: center;
+	background-color: var(--secondary-background);
+	&::after {
+		width: 100%;
+		height: 100%;
+		content: "flex-box";
+		font-size: 20vmin;
+		opacity: 0.1;
+		position: absolute;
+		display: grid;
+		place-items: center;
+	}
+}
+
+.item {
+	z-index: 1;
+}

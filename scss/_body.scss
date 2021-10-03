@@ -12,10 +12,13 @@
 	--standard-button: teal;
 	--border-radius: 0.5rem;
 	--text-size: 1.5rem;
-
+	// Default light theme
 	--primary-background: white;
 	--secondary-background: white;
 	--foreground: black;
+	--sandbox-border: 10px solid black;
+	--sandbox-br: var(--border-radius);
+	--input-border: 1px solid black;
 }
 
 body {
@@ -27,179 +30,11 @@ body {
 	background-color: var(--primary-background);
 }
 
-h3 {
-	text-transform: capitalize;
-	text-align: center;
-	font-size: 2rem;
-	padding-bottom: 0.5rem;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-input, select {
-	background-color: var(--secondary-background);
-	color: var(--foreground);
-	
-	border: 1px solid black;
-	width: 100%;
-	padding: 0.5rem;
-	font-family: 'Courier New', Courier, monospace;
-	font-size: var(--text-size);
-	border-radius: var(--border-radius);
-}
-
-button {
-	background-color: var(--standard-button);
-	padding: 1rem;
-	font-size: var(--text-size);
-	font-weight: bold;
-	color: var(--foreground);
-	border: none;
-	border-radius: var(--border-radius);
-	width: 80%;
-	cursor: pointer;
-}
-
-button:active {
-	scale: 0.95;
-}
-
-.info {
-	display: grid;
-	place-items: center;
-	border: solid var(--foreground) 0.1rem;
-	margin: 0 1rem;
-	width: 1.5rem;
-	height: 1.5rem;
-	font-size: 1rem;
-	font-weight: bold;
-	border-radius: 2rem;
-	cursor: help;
-}
-
-.controls {
-	min-width: 35vmin;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.controls article {
-	width: 100%;
-}
-
-.container {
-	position: relative;
-	border: 10px solid black;
-	border-radius: var(--border-radius);
-	display: flex;
-	overflow: auto;
-	height: 95vmin;
-	align-self: center;
-	background-color: var(--secondary-background);
-}
-
-.container::after {
-	width: 100%;
-	height: 100%;
-	content: "flex-box";
-	font-size: 20vmin;
-	opacity: 0.1;
-	position: absolute;
-	display: grid;
-	place-items: center;
-}
-
-.container-controls, .box-controls {
-	padding: 1rem;
-	display: flex;
-	flex-wrap: wrap;
-}
-
-.container-controls article, .box-controls article {
-	width: unset;
-	margin: 0.5rem;
-	flex-grow: 1;
-	min-width: 15rem;
-}
-
-.item {
-	z-index: 1;
-}
-
-/* ################################################ Mobile ################################################ */
-
-@media(max-width: 140vh) {
-	body {
-	display: flex;
-	flex-direction: column;
-	}
-	.container {
-		height: 100vmin;
-		width: 100%;
-		max-height: 50vh;
-		flex-shrink: 0;
-	}
-}
-
 /* ############################################# Theme toggle ############################################# */
-
-theme-toggle::part(circle) {
-	background-color: teal;
-}
 
 theme-toggle {
 	margin-top: auto;
-}
-
-/* ############################################### Dark mode ############################################## */
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--primary-background: #2F3136;
-		--secondary-background: #40444B;
-		--foreground: white;
+	&::part(circle) {
+		background-color: teal;
 	}
-
-	.container {
-		border-radius: unset;
-		border: none;
-	}
-
-	input, select {
-		border: none;
-	}
-}
-
-:root[theme="dark"] {
-	--primary-background: #2F3136;
-	--secondary-background: #40444B;
-	--foreground: white;
-}
-
-:root[theme="dark"] .container {
-	border-radius: unset;
-	border: none;
-}
-
-:root[theme="dark"] input, :root[theme="dark"] select {
-	border: none;
-}
-
-/* ############################################## light mode ############################################## */
-
-:root[theme="light"] {
-	--primary-background: white;
-	--secondary-background: white;
-	--foreground: black;
-}
-
-:root[theme="light"] .container {
-	border: 10px solid black;
-	border-radius: var(--border-radius);
-}
-
-:root[theme="light"] input, :root[theme="light"] select {
-	border: 1px solid black;
 }

@@ -1,7 +1,7 @@
-const container = document.querySelector(".container");
+const sandbox = document.querySelector(".sandbox");
 const widthSelect = document.querySelector("select[name='width']");
 const heightSelect = document.querySelector("select[name='height']");
-const containerControls = document.querySelectorAll("select[for='container']");
+const sandboxControls = document.querySelectorAll("select[for='sandbox']");
 const boxes = document.querySelector("input[name='boxes']");
 
 const defualtBoxCount = 3;
@@ -12,7 +12,7 @@ let prev = boxes.value;
 //info ############################################## Functions ##############################################
 
 /**
- * Set the given dimension of all the boxes in the container to the given value
+ * Set the given dimension of all the boxes in the sandbox to the given value
  * @param {String} dimension - Either "width" or "height"
  * @param {*} value - A number between 1 and 5 (inclusive) or the string "unset" or "random"
  */
@@ -32,17 +32,17 @@ let prev = boxes.value;
 }
 
 /**
- * Fill the container with num different colored boxes
- * @param {Number} num - The number of boxes to fill the container with
+ * Fill the sandbox with num different colored boxes
+ * @param {Number} num - The number of boxes to fill the sandbox with
  */
-function populateContainer(num) {
+function populateSandbox(num) {
 	let hue = 0;
-	container.innerHTML = "";
+	sandbox.innerHTML = "";
 	for (let i = 0; i < num; ++i) {
 		let item = document.createElement("div");
 		item.classList.add("item");
 		item.style["background-color"] = `hsl(${hue}, 100%, 50%)`;
-		container.appendChild(item);
+		sandbox.appendChild(item);
 		hue += 30;
 	}
 	setDimension("width", widthSelect.value);
@@ -50,25 +50,25 @@ function populateContainer(num) {
 }
 
 /**
- * Set the containers given flex property to the value of the triggered input
+ * Set the sandbox's given flex property to the value of the triggered input
  */
 function setFlexProperty() {
-	container.style[this.name] = this.value;
+	sandbox.style[this.name] = this.value;
 }
 
 /**
- * Reset all the inputs and the display container
+ * Reset all the inputs and the sandbox
  */
 function reset() {
 	widthSelect.value = widthSelect.children[0].value;
 	heightSelect.value = heightSelect.children[0].value;
 	prev = defualtBoxCount;
 	boxes.value = defualtBoxCount;
-	for (const select of containerControls) {
+	for (const select of sandboxControls) {
 		select.value = select.children[0].value;
-		container.style = "";
+		sandbox.style = "";
 	}
-	populateContainer(prev);
+	populateSandbox(prev);
 }
 
 //info ########################################### Event Listeners ###########################################
@@ -80,12 +80,12 @@ boxes.addEventListener("change", function() {
 	if (this.value > 20 || this.value < 1 || isNaN(this.value))
 		this.value = prev;
 	else {
-		populateContainer(this.value)
+		populateSandbox(this.value)
 		prev = this.value;
 	}
 })
 
-for (const select of containerControls) {
+for (const select of sandboxControls) {
 	select.addEventListener("change", setFlexProperty);
 }
 
@@ -93,9 +93,9 @@ document.querySelector("#reset").addEventListener("click", reset);
 
 //info ########################################### Run on page load ##########################################
 
-for (const select of containerControls) {
+for (const select of sandboxControls) {
 	if (select.value !== select.children[0].value) {
-		container.style[select.name] = select.value;
+		sandbox.style[select.name] = select.value;
 	}
 }
-populateContainer(prev);
+populateSandbox(prev);

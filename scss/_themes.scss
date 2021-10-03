@@ -1,0 +1,19 @@
+:root[theme="dark"] {
+	--primary-background: #2F3136;
+	--secondary-background: #40444B;
+	--foreground: white;
+	--sandbox-border: none;
+	--sandbox-br: unset;
+	--input-border: none;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root[theme="system"] {
+		--primary-background: #2F3136;
+		--secondary-background: #40444B;
+		--foreground: white;
+		--sandbox-border: none;
+		--sandbox-br: unset;
+		--input-border: none;
+	}
+}

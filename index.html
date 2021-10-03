@@ -11,16 +11,16 @@
 	<title>Flexbox Sandbox</title>
 </head>
 	<body>
-		<div class="container">
+		<div class="sandbox">
 			<div class="item1"></div>
 			<div class="item2"></div>
 			<div class="item3"></div>
 		</div>
 		<section class="controls">
-			<article class="container-controls">
+			<article class="control">
 				<article>
 					<h3>flex-direction</h3>
-					<select for="container" name="flex-direction">
+					<select for="sandbox" name="flex-direction">
 						<option value="row">row</option>
 						<option value="row-reverse">row-reverse</option>
 						<option value="column">column</option>
@@ -29,7 +29,7 @@
 				</article>
 				<article>
 					<h3>justify-content</h3>
-					<select for="container" name="justify-content">
+					<select for="sandbox" name="justify-content">
 						<option value="flex-start">flex-start</option>
 						<option value="flex-end">flex-end</option>
 						<option value="center">center</option>
@@ -40,7 +40,7 @@
 				</article>
 				<article>
 					<h3>align-items</h3>
-					<select for="container" name="align-items">
+					<select for="sandbox" name="align-items">
 						<option value="stretch">stretch</option>
 						<option value="flex-start">flex-start</option>
 						<option value="flex-end">flex-end</option>
@@ -49,10 +49,10 @@
 					</select>
 				</article>
 			</article>
-			<article class="container-controls">
+			<article class="control">
 				<article>
 					<h3>flex-wrap<span class="info" title="flex-flow: <direction> <wrap>; can be used to set flex-direction and flex-wrap simultaneously">?</span></h3>
-					<select for="container" name="flex-wrap">
+					<select for="sandbox" name="flex-wrap">
 						<option value="nowrap">nowrap</option>
 						<option value="wrap">wrap</option>
 						<option value="wrap-reverse">wrap-reverse</option>
@@ -60,7 +60,7 @@
 				</article>
 				<article>
 					<h3>align-content</h3>
-					<select for="container" name="align-content">
+					<select for="sandbox" name="align-content">
 						<option value="stretch">stretch</option>
 						<option value="flex-start">flex-start</option>
 						<option value="flex-end">flex-end</option>
@@ -71,7 +71,7 @@
 					</select>
 				</article>
 			</article>
-			<article class="box-controls">
+			<article class="control">
 				<article>
 					<h3>boxes</h3>
 					<input type="number" name="boxes" min="1" max="20" value="3">
