@@ -8,13 +8,24 @@ class Sandbox extends HTMLElement {
 		this.items = [];
 		this.selectedItems = {};
 		this.shiftStartItem = null;
-		this.controls;
+		this.controls = document.querySelectorAll(`select[for='${this.id}']`);
+
+		this.addEventListener("click", e => {
+			if (e.target.nodeName === "SAND-BOX") {
+				this.deselectAllItems();
+			}
+		});
+		for (const select of this.controls) {
+			select.addEventListener("change", e => {
+				this.setFlexProperty(e.currentTarget.name, e.currentTarget.value);
+			});
+		}
 	}
 	/**
 	 * Add an item to the sandbox
 	 */
 	addItem() {
-		let item = new Item(widthSelect.value, heightSelect.value);
+		const item = new Item(widthSelect.value, heightSelect.value);
 		this.items.push(item);
 		this.appendChild(item);
 	}
@@ -22,7 +33,7 @@ class Sandbox extends HTMLElement {
 	 * Remove an item from the sandbox
 	 */
 	removeItem() {
-		let item = this.items.pop();
+		const item = this.items.pop();
 		delete this.selectedItems[item.n];
 		if (this.shiftStartItem === item) {
 			this.shiftStartItem = null;
@@ -80,6 +91,14 @@ class Sandbox extends HTMLElement {
 	deselectItem(item) {
 		item.classList.remove("selected");
 		delete this.selectedItems[item.n];
+	}
+	/**
+	 * Select all items in the sandbox
+	 */
+	selectAllItems() {
+		for (const item of this.items) {
+			this.selectItem(item);
+		}
 	}
 	/**
 	 * Reset all selected items in the sandbox
