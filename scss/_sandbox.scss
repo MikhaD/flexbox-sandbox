@@ -1,4 +1,4 @@
-.sandbox {
+#sandbox {
 	position: relative;
 	border: var(--sandbox-border);
 	border-radius: var(--sandbox-br);
@@ -19,6 +19,15 @@
 	}
 }
 
-.item {
+.selected {
+	scale: 0.9;
+}
+
+flex-item {
 	z-index: 1;
+	cursor: pointer;
+	transition: scale 0.1s ease;
+	&:hover {
+		@extend .selected;
+	}
 }

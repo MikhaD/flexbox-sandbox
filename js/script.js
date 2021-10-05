@@ -1,60 +1,120 @@
-const sandbox = document.querySelector(".sandbox");
-const widthSelect = document.querySelector("select[name='width']");
-const heightSelect = document.querySelector("select[name='height']");
-const sandboxControls = document.querySelectorAll("select[for='sandbox']");
-const boxes = document.querySelector("input[name='boxes']");
+//info ############################################### Classes ###############################################
 
-const defualtBoxCount = 3;
+class Sandbox {
+	static DEFUALT_BOX_COUNT = 5;
+	/** The number of boxes there were prior to the latest change in the number of boxes */
+	prev = Sandbox.DEFUALT_BOX_COUNT;
+	items = [];
+	selectedItems = {};
+	controls;
 
-/** The number of boxes there were prior to the latest change in the number of boxes */
-let prev = boxes.value;
+	constructor(sandbox) {
+		this.sandbox = sandbox;
+	}
 
-//info ############################################## Functions ##############################################
+	addItem() {
+		let item = new Item(widthSelect.value, heightSelect.value);
+		this.items.push(item);
+		this.sandbox.appendChild(item);
+	}
 
-/**
- * Set the given dimension of all the boxes in the sandbox to the given value
- * @param {String} dimension - Either "width" or "height"
- * @param {*} value - A number between 1 and 5 (inclusive) or the string "unset" or "random"
- */
- function setDimension(dimension, value) {
-	for (let i of document.querySelectorAll(".item")) {
-		switch (value) {
-			case "unset":
-				i.style[dimension] = value;
-				break;
-			case "random":
-				i.style[dimension] = Math.ceil(Math.random()*5) * 5 + "vmax";
-				break
-			default:
-				i.style[dimension] = value * 5 + "vmax";
+	removeItem() {
+		let item = this.items.pop();
+		delete this.selectedItems[item.n];
+		item.remove();
+	}
+
+	clear() {
+		Item.hue = 0;
+		Item.instances = 0;
+		this.sandbox.innerHTML = "";
+		this.items = [];
+		this.selectedItems = {};
+	}
+	/**
+	 * Fill the sandbox with num different colored boxes
+	 * @param {Number} num - The number of boxes to fill the sandbox with
+	 */
+	rePopulate(num) {
+		this.clear();
+		for (let i = 0; i < num; ++i) {
+			this.addItem();
 		}
 	}
-}
-
-/**
- * Fill the sandbox with num different colored boxes
- * @param {Number} num - The number of boxes to fill the sandbox with
- */
-function populateSandbox(num) {
-	let hue = 0;
-	sandbox.innerHTML = "";
-	for (let i = 0; i < num; ++i) {
-		let item = document.createElement("div");
-		item.classList.add("item");
-		item.style["background-color"] = `hsl(${hue}, 100%, 50%)`;
-		sandbox.appendChild(item);
-		hue += 30;
+	/**
+	 * Set the sandbox's given flex property to the value of the triggered input
+	 */
+	setFlexProperty(property, value) {
+		this.sandbox.style[property] = value;
 	}
-	setDimension("width", widthSelect.value);
-	setDimension("height", heightSelect.value);
+
+	setItemsDimensions(dimension, value) {
+		for (const item of this.items) {
+			item.setDimension(dimension, value);
+		}
+	}
+
+	addEventListener(event, callback) {
+		this.sandbox.addEventListener(event, callback);
+	}
+
+	clearSelectedItems() {
+		console.log("Selected items before:", this.selectedItems);
+		for (const key in this.selectedItems) {
+			this.selectedItems[key].remove("selected");
+			this.selectedItems[key] = null;
+		}
+		console.log("Selected items after:", this.selectedItems);
+	}
 }
 
-/**
- * Set the sandbox's given flex property to the value of the triggered input
- */
-function setFlexProperty() {
-	sandbox.style[this.name] = this.value;
+class Item extends HTMLElement {
+	static MAX_SIZE = 5;
+	static HUE_INC = 30;
+	static hue = 0;
+	static instances = 0;
+
+	constructor(width, height) {
+		super();
+		this.style["background-color"] = `hsl(${Item.hue}, 100%, 50%)`;
+		Item.hue += Item.HUE_INC;
+		this.addEventListener("click", itemClick);
+		this.setDimension("width", width);
+		this.setDimension("height", height);
+		this.n = ++Item.instances;
+	}
+
+	setDimension(dimension, value) {
+		switch (value) {
+			case "unset":
+				this.style[dimension] = value;
+				break;
+			case "random":
+				this.style[dimension] = Math.ceil(Math.random()*Item.MAX_SIZE) * 5 + "vmax";
+				break
+			default:
+				this.style[dimension] = value * 5 + "vmax";
+		}
+	}
+
+	remove() {
+		--Item.instances;
+		Item.hue -= Item.HUE_INC;
+		super.remove();
+	}
 }
+
+window.customElements.define("flex-item", Item);
+
+//info ############################################## Constants ##############################################
+
+const sandbox = new Sandbox(document.querySelector("#sandbox"));
+sandbox.controls = document.querySelectorAll("select[for='sandbox']");
+const widthSelect = document.querySelector("select[name='width']");
+const heightSelect = document.querySelector("select[name='height']");
+const boxes = document.querySelector("input[name='boxes']");
+
+//info ############################################## Functions ##############################################
 
 /**
  * Reset all the inputs and the sandbox
@@ -62,40 +122,118 @@ function setFlexProperty() {
 function reset() {
 	widthSelect.value = widthSelect.children[0].value;
 	heightSelect.value = heightSelect.children[0].value;
-	prev = defualtBoxCount;
-	boxes.value = defualtBoxCount;
-	for (const select of sandboxControls) {
+	sandbox.prev = Sandbox.DEFUALT_BOX_COUNT;
+	boxes.value = Sandbox.DEFUALT_BOX_COUNT;
+	for (const select of sandbox.controls) {
 		select.value = select.children[0].value;
-		sandbox.style = "";
 	}
-	populateSandbox(prev);
+	sandbox.sandbox.style = "";
+	sandbox.prev = Sandbox.DEFUALT_BOX_COUNT;
+	sandbox.rePopulate(Sandbox.DEFUALT_BOX_COUNT);
+}
+
+function itemClickk(e) {
+	if (e.shiftKey) {
+		let from, to = e.currentTarget.n;
+		if (selectedItems.length > 0) {
+			from = selectedItems.pop().n;
+			clearSelectedItems();
+			const inc = (from < to) ? 1 : -1;
+			for (from; from !== to; from += inc) {
+				items[from].classList.add("selected");
+				selectedItems.push(items[from]);
+			}
+		}
+	} else if (!e.ctrlKey) {
+		clearSelectedItems();
+	}
+	// Deselection currently not working because I'm clearing selected items if Ctrl isn't being held
+	if (e.currentTarget.classList.contains("selected")) {
+		for (let i = 0; i < selectedItems.length; ++i) {
+			if (selectedItems[i].n === e.currentTarget.n) {
+				selectedItems.splice(i, 1);
+				break;
+			}
+		}
+	} else {
+		e.currentTarget.classList.add("selected");
+		selectedItems.push(e.currentTarget);
+	}
+}
+
+function itemClick(e) {
+	// if (e.shiftKey) {
+	// 	if (Object.keys(sandbox.selectedItems).length > 0) {
+
+	// 	}
+	// } else
+	if (e.ctrlKey) {
+		if (e.currentTarget.classList.contains("selected")) {
+			e.currentTarget.classList.remove("selected");
+			delete sandbox.selectedItems[e.currentTarget.n];
+		} else {
+			e.currentTarget.classList.add("selected");
+			sandbox.selectedItems[e.currentTarget.n] = e.currentTarget;
+		}
+	} else {
+		sandbox.clearSelectedItems();
+		e.currentTarget.classList.add("selected");
+		sandbox.selectedItems[e.currentTarget.n] = e.currentTarget;
+	}
 }
 
 //info ########################################### Event Listeners ###########################################
 
-widthSelect.addEventListener("change", function() { setDimension("width", this.value) })
-heightSelect.addEventListener("change", function() { setDimension("height", this.value) })
+widthSelect.addEventListener("change", function() { sandbox.setItemsDimensions("width", this.value) })
+heightSelect.addEventListener("change", function() { sandbox.setItemsDimensions("height", this.value) })
 
 boxes.addEventListener("change", function() {
-	if (this.value > 20 || this.value < 1 || isNaN(this.value))
-		this.value = prev;
-	else {
-		populateSandbox(this.value)
-		prev = this.value;
+	if (this.value > 20 || this.value < 1 || isNaN(this.value)) {
+		this.value = sandbox.prev;
+	} else {
+		if (this.value > sandbox.prev) {
+			for (let i = sandbox.prev; i < this.value; ++i) {
+				sandbox.addItem();
+			}
+		} else {
+			for (let i = this.value; i < sandbox.prev; ++i) {
+				sandbox.removeItem();
+			}
+		}
+		sandbox.prev = this.value;
 	}
 })
 
-for (const select of sandboxControls) {
-	select.addEventListener("change", setFlexProperty);
+for (const select of sandbox.controls) {
+	select.addEventListener("change", e => {
+		sandbox.setFlexProperty(e.currentTarget.name, e.currentTarget.value);
+	});
 }
 
 document.querySelector("#reset").addEventListener("click", reset);
 
-//info ########################################### Run on page load ##########################################
+sandbox.addEventListener("click", e => {
+	if (e.target.id === "sandbox") {
+		sandbox.clearSelectedItems();
+	}
+});
 
-for (const select of sandboxControls) {
+window.addEventListener("keydown", e => {
+	if ((e.key === "a" || e.key === "A") && e.ctrlKey) {
+		e.preventDefault();
+		console.log(e.key, e.ctrlKey);
+	}
+	// if (e.key === "L") {
+	// 	// Debug action here
+	// }
+});
+
+//info ########################################### Run on page load ##########################################
+boxes.value = Sandbox.DEFUALT_BOX_COUNT;
+
+for (const select of sandbox.controls) {
 	if (select.value !== select.children[0].value) {
-		sandbox.style[select.name] = select.value;
+		sandbox.sandbox.style[select.name] = select.value;
 	}
 }
-populateSandbox(prev);
+sandbox.rePopulate(sandbox.prev);
