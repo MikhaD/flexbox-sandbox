@@ -6,6 +6,7 @@ class Sandbox {
 	prev = Sandbox.DEFUALT_BOX_COUNT;
 	items = [];
 	selectedItems = {};
+	shiftStartItem = null;
 	controls;
 
 	constructor(sandbox) {
@@ -58,13 +59,21 @@ class Sandbox {
 		this.sandbox.addEventListener(event, callback);
 	}
 
-	clearSelectedItems() {
-		console.log("Selected items before:", this.selectedItems);
+	selectItem(item) {
+		item.classList.add("selected");
+		sandbox.selectedItems[item.n] = item;
+	}
+
+	deselectItem(item) {
+		item.classList.remove("selected");
+		delete this.selectedItems[item.n];
+	}
+
+	deselectAllItems() {
 		for (const key in this.selectedItems) {
-			this.selectedItems[key].remove("selected");
-			this.selectedItems[key] = null;
+			this.deselectItem(this.selectedItems[key]);
 		}
-		console.log("Selected items after:", this.selectedItems);
+		this.shiftStartItem = null;
 	}
 }
 
@@ -132,54 +141,32 @@ function reset() {
 	sandbox.rePopulate(Sandbox.DEFUALT_BOX_COUNT);
 }
 
-function itemClickk(e) {
-	if (e.shiftKey) {
-		let from, to = e.currentTarget.n;
-		if (selectedItems.length > 0) {
-			from = selectedItems.pop().n;
-			clearSelectedItems();
-			const inc = (from < to) ? 1 : -1;
-			for (from; from !== to; from += inc) {
-				items[from].classList.add("selected");
-				selectedItems.push(items[from]);
-			}
-		}
-	} else if (!e.ctrlKey) {
-		clearSelectedItems();
-	}
-	// Deselection currently not working because I'm clearing selected items if Ctrl isn't being held
-	if (e.currentTarget.classList.contains("selected")) {
-		for (let i = 0; i < selectedItems.length; ++i) {
-			if (selectedItems[i].n === e.currentTarget.n) {
-				selectedItems.splice(i, 1);
-				break;
-			}
-		}
-	} else {
-		e.currentTarget.classList.add("selected");
-		selectedItems.push(e.currentTarget);
-	}
-}
 
 function itemClick(e) {
-	// if (e.shiftKey) {
-	// 	if (Object.keys(sandbox.selectedItems).length > 0) {
+	if (e.shiftKey) {
+		const temp = sandbox.shiftStartItem;
+		sandbox.deselectAllItems();
+		sandbox.shiftStartItem = temp;
+		if (sandbox.shiftStartItem === null) {
+			sandbox.shiftStartItem = sandbox.items[0];
+		}
+		let inc = (sandbox.shiftStartItem.n < e.currentTarget.n) ? 1 : -1;
 
-	// 	}
-	// } else
-	if (e.ctrlKey) {
+		for (let i = sandbox.shiftStartItem.n; i - e.currentTarget.n !== 0; i += inc) {
+			sandbox.selectItem(sandbox.items[i-1]);
+		}
+	} else if (e.ctrlKey) {
 		if (e.currentTarget.classList.contains("selected")) {
-			e.currentTarget.classList.remove("selected");
-			delete sandbox.selectedItems[e.currentTarget.n];
+			sandbox.deselectItem(e.currentTarget);
+			return;
 		} else {
-			e.currentTarget.classList.add("selected");
-			sandbox.selectedItems[e.currentTarget.n] = e.currentTarget;
+			sandbox.shiftStartItem = e.currentTarget;
 		}
 	} else {
-		sandbox.clearSelectedItems();
-		e.currentTarget.classList.add("selected");
-		sandbox.selectedItems[e.currentTarget.n] = e.currentTarget;
+		sandbox.deselectAllItems();
+		sandbox.shiftStartItem = e.currentTarget;
 	}
+	sandbox.selectItem(e.currentTarget);
 }
 
 //info ########################################### Event Listeners ###########################################
@@ -214,7 +201,7 @@ document.querySelector("#reset").addEventListener("click", reset);
 
 sandbox.addEventListener("click", e => {
 	if (e.target.id === "sandbox") {
-		sandbox.clearSelectedItems();
+		sandbox.deselectAllItems();
 	}
 });
 
