@@ -13,6 +13,7 @@ input, select {
 button {
 	background-color: var(--standard-button);
 	padding: 1rem;
+	margin: 1rem;
 	font-size: var(--text-size);
 	font-weight: bold;
 	color: var(--foreground);
@@ -48,10 +49,11 @@ button {
 	}
 }
 
-.control {
-	padding: 1rem;
+.control-group {
+	padding: 0 0 1rem 0;
 	display: flex;
 	flex-wrap: wrap;
+	align-content: flex-start;
 	article {
 		width: unset;
 		margin: 0.5rem;
@@ -68,4 +70,18 @@ h3 {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+#item-controls {
+	margin-top: 3rem;
+}
+
+#select-hint {
+	text-align: center;
+	font-size: 1.5rem;
+	margin: 1rem 0;
+}
+
+.hidden {
+	display: none;
 }

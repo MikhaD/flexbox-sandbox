@@ -1,14 +1,15 @@
 //info ############################################## Constants ##############################################
 const sandbox = document.querySelector("#sandbox");
-const widthSelect = document.querySelector("select[name='width']");
-const heightSelect = document.querySelector("select[name='height']");
 const boxes = document.querySelector("input[name='boxes']");
-
+const inputs = document.querySelectorAll("input");
+const selects = document.querySelectorAll("select");
 //info ########################################### Event Listeners ###########################################
 document.querySelector("#reset").addEventListener("click", reset);
-
-widthSelect.addEventListener("change", function() { sandbox.setItemsDimensions("width", this.value) });
-heightSelect.addEventListener("change", function() { sandbox.setItemsDimensions("height", this.value) });
+document.querySelector(".controls").addEventListener("click", e => {
+	if (e.target.classList.contains("controls")) {
+		sandbox.deselectAllItems();
+	}
+});
 
 boxes.addEventListener("change", function() {
 	if (this.value > 20 || this.value < 1 || isNaN(this.value)) {
@@ -42,12 +43,14 @@ window.addEventListener("keydown", e => {
  * Reset all the inputs and the sandbox
  */
  function reset() {
-	widthSelect.value = widthSelect.children[0].value;
-	heightSelect.value = heightSelect.children[0].value;
+	for (const input of inputs) {
+		input.value = input.getAttribute("initial");
+	}
 	sandbox.prev = Sandbox.DEFUALT_BOX_COUNT;
-	boxes.value = Sandbox.DEFUALT_BOX_COUNT;
-	for (const select of sandbox.controls) {
-		select.value = select.children[0].value;
+	for (const select of selects) {
+		if (select.children[0]) {
+			select.value = select.children[0].value;
+		}
 	}
 	sandbox.style = "";
 	sandbox.rePopulate(Sandbox.DEFUALT_BOX_COUNT);
@@ -85,4 +88,5 @@ function itemClick(e) {
 }
 
 //info ########################################### Run on page load ##########################################
+boxes.setAttribute("initial", Sandbox.DEFUALT_BOX_COUNT);
 reset();

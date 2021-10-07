@@ -14,6 +14,14 @@ class Item extends HTMLElement {
 		this.n = ++Item.instances;
 	}
 
+	setStyle(style, value) {
+		if (style === "width" || style === "height") {
+			this.setDimension(style, value);
+		} else {
+			this.style[style] = value;
+		}
+	}
+
 	setDimension(dimension, value) {
 		switch (value) {
 			case "unset":
