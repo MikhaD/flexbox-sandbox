@@ -27,7 +27,7 @@ class Sandbox extends HTMLElement {
 				if (e.currentTarget.nodeName === "INPUT" && (val < e.currentTarget.min || val > e.currentTarget.max || isNaN(val))) {
 					e.currentTarget.value = e.currentTarget.prev;
 				} else {
-					this.style[e.currentTarget.name] = val + (isNaN(val) ? "": "rem");
+					this.style[e.currentTarget.name] = e.currentTarget.value + (isNaN(e.currentTarget.value) ? "": "rem");
 					e.currentTarget.prev = val;
 				}
 			});
@@ -42,7 +42,7 @@ class Sandbox extends HTMLElement {
 					e.currentTarget.value = e.currentTarget.prev;
 				} else {
 					for (const n in this.selectedItems) {
-						this.selectedItems[n].setStyle(e.currentTarget.name, val);
+						this.selectedItems[n].setStyle(e.currentTarget.name, e.currentTarget.value);
 					}
 					e.currentTarget.prev = val;
 				}
@@ -53,7 +53,7 @@ class Sandbox extends HTMLElement {
 	 * Add an item to the sandbox
 	 */
 	addItem() {
-		const item = new Item(1, 1);
+		const item = new Item(this);
 		item.classList.add(`${this.id}-item`);
 		this.items.push(item);
 		this.appendChild(item);

@@ -29,3 +29,11 @@ body {
 	grid-template-columns: 90vmin 1fr;
 	background-color: var(--primary-background);
 }
+
+.hidden {
+	display: none !important;
+}
+
+.invisible {
+	visibility: hidden;
+}
