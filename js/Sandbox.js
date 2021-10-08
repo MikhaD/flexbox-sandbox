@@ -8,7 +8,7 @@ class Sandbox extends HTMLElement {
 		this.items = [];
 		this.selectedItems = {};
 		this.shiftStartItem = null;
-		this.controls = document.querySelectorAll(`select[for='${this.id}']`);
+		this.controls = document.querySelectorAll(`[for='${this.id}']`);
 		this.itemControlSet = document.querySelector("#item-controls");
 		this.itemControls = this.itemControlSet.querySelectorAll(`[for='${this.id}-item']`);
 		this.selectHint = document.querySelector("#select-hint");
@@ -18,15 +18,33 @@ class Sandbox extends HTMLElement {
 				this.deselectAllItems();
 			}
 		});
-		for (const select of this.controls) {
-			select.addEventListener("change", e => {
-				this.style[e.currentTarget.name] = e.currentTarget.value;
+		for (const control of this.controls) {
+			if (control.nodeName === "INPUT") {
+				control.prev = control.getAttribute("initial");
+			}
+			control.addEventListener("change", e => {
+				const val = parseInt(e.currentTarget.value);
+				if (e.currentTarget.nodeName === "INPUT" && (val < e.currentTarget.min || val > e.currentTarget.max || isNaN(val))) {
+					e.currentTarget.value = e.currentTarget.prev;
+				} else {
+					this.style[e.currentTarget.name] = val + (isNaN(val) ? "": "rem");
+					e.currentTarget.prev = val;
+				}
 			});
 		}
 		for (const control of this.itemControls) {
+			if (control.nodeName === "INPUT") {
+				control.prev = control.getAttribute("initial");
+			}
 			control.addEventListener("change", e => {
-				for (const n in this.selectedItems) {
-					this.selectedItems[n].setStyle(e.currentTarget.name, e.currentTarget.value);
+				const val = parseInt(e.currentTarget.value);
+				if (e.currentTarget.nodeName === "INPUT" && (val < e.currentTarget.min || val > e.currentTarget.max || isNaN(val))) {
+					e.currentTarget.value = e.currentTarget.prev;
+				} else {
+					for (const n in this.selectedItems) {
+						this.selectedItems[n].setStyle(e.currentTarget.name, val);
+					}
+					e.currentTarget.prev = val;
 				}
 			});
 		}
@@ -80,6 +98,7 @@ class Sandbox extends HTMLElement {
 		item.classList.add("selected");
 		sandbox.selectedItems[item.n] = item;
 		this.toggleItemControls(true);
+		//todo go through each box for each control and see whether 
 	}
 	/**
 	 * Deselect an item in the sandbox
