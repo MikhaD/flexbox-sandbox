@@ -1,5 +1,13 @@
 class Sandbox extends HTMLElement {
 	static DEFUALT_BOX_COUNT = 5;
+	static DEFAULTS = {
+		"flex-direction": "row",
+		"justify-content": "normal",
+		"align-items": "normal",
+		"flex-wrap": "nowrap",
+		"align-content": "normal",
+		"gap": "0rem"
+	};
 	
 	constructor() {
 		super();
@@ -11,6 +19,7 @@ class Sandbox extends HTMLElement {
 		this.controls = document.querySelectorAll(`[for='${this.id}']`);
 		this.itemControlSet = document.querySelector("#item-controls");
 		this.itemControls = this.itemControlSet.querySelectorAll(`[for='${this.id}-item']`);
+		this.itemControlValues = {};
 		this.selectHint = document.querySelector("#select-hint");
 
 		this.addEventListener("click", e => {
@@ -74,10 +83,11 @@ class Sandbox extends HTMLElement {
 	 * Remove all items from the sandbox
 	 */
 	clear() {
+		this.deselectAllItems();
+		this.itemControlValues = {};
 		Item.hue = 0;
 		Item.instances = 0;
 		this.innerHTML = "";
-		this.deselectAllItems();
 		this.items = [];
 	}
 	/**
@@ -91,24 +101,33 @@ class Sandbox extends HTMLElement {
 		}
 	}
 	/**
-	 * Select an item in the sandbox
+	 * Select an item in the sandbox and update the selected item controls
 	 * @param {Item} item - the Item object to select
 	 */
 	selectItem(item) {
 		item.classList.add("selected");
-		sandbox.selectedItems[item.n] = item;
+		this.selectedItems[item.n] = item;
+
+		this.mergeItemControlValues(item);
+		this.setItemControls(this.itemControlValues);
 		this.toggleItemControls(true);
-		//todo go through each box for each control and see whether 
 	}
 	/**
-	 * Deselect an item in the sandbox
+	 * Deselect an item in the sandbox and optionally update the values of the item controls
 	 * @param {Item} item - the Item object to deselect
+	 * @param {Boolean} updateControlValues - Whether or not to update item control values (Default: true)
 	 */
-	deselectItem(item) {
+	deselectItem(item, updateControlValues) {
 		item.classList.remove("selected");
 		delete this.selectedItems[item.n];
 		if (Object.keys(this.selectedItems).length === 0) {
 			this.toggleItemControls(false);
+		} else if (updateControlValues !== false) {
+			this.itemControlValues = {};
+			for (const key in this.selectedItems) {
+				this.mergeItemControlValues(this.selectedItems[key]);
+			}
+			this.setItemControls(this.itemControlValues);
 		}
 	}
 	/**
@@ -124,8 +143,9 @@ class Sandbox extends HTMLElement {
 	 */
 	deselectAllItems() {
 		for (const key in this.selectedItems) {
-			this.deselectItem(this.selectedItems[key]);
+			this.deselectItem(this.selectedItems[key], false);
 		}
+		this.itemControlValues = {};
 		this.shiftStartItem = null;
 	}
 	/**
@@ -134,12 +154,40 @@ class Sandbox extends HTMLElement {
 	 */
 	toggleItemControls(on) {
 		if (on) {
-			//todo Put the item values for the selected item in the item controls when that item is selected, or blank if multiple items are selected that have different properties for that value
 			this.selectHint.classList.add("hidden");
 			this.itemControlSet.classList.remove("hidden");
 		} else {
 			this.selectHint.classList.remove("hidden");
 			this.itemControlSet.classList.add("hidden");
+		}
+	}
+
+	mergeItemControlValues(item) {
+		for (const style of item.style) {
+			if (Item.DEFAULTS[style] !== undefined) {
+				if (this.itemControlValues[style] === undefined) {
+					this.itemControlValues[style] = item.style[style];
+				} else if (this.itemControlValues[style] !== item.style[style]) {
+					console.log("Should be getting this message");
+					this.itemControlValues[style] = null;
+				}
+			}
+		}
+	}
+
+	setItemControls(values) {
+		for (const control of this.itemControls) {
+			let val = values[control.name];
+			if (val === undefined) {
+				control.value = Item.DEFAULTS[control.name];
+			} else if (val === null) {
+				control.value = "";
+			} else {
+				if (val.endsWith(Item.SIZE_UNITS)) {
+					val = val.slice(0, Item.SIZE_UNITS.length*-1)/Item.SIZE_MULTIPLIER;
+				}
+				control.value = val;
+			}
 		}
 	}
 }

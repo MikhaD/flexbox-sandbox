@@ -1,4 +1,15 @@
 class Item extends HTMLElement {
+	static SIZE_MULTIPLIER = 5;
+	static SIZE_UNITS = "vmax";
+	static DEFAULTS = {
+		"width": `${Item.SIZE_MULTIPLIER}${Item.SIZE_UNITS}`,
+		"height": `${Item.SIZE_MULTIPLIER}${Item.SIZE_UNITS}`,
+		"order": "0",
+		"flex-grow": "0",
+		"flex-shrink": "1",
+		"flex-basis": "auto",
+		"align-self": "auto"
+	};
 	static MAX_SIZE = 5;
 	static HUE_INC = 30;
 	static hue = 0;
@@ -30,10 +41,10 @@ class Item extends HTMLElement {
 				this.style[dimension] = value;
 				break;
 			case "random":
-				this.style[dimension] = Math.ceil(Math.random()*Item.MAX_SIZE) * 5 + "vmax";
+				this.style[dimension] = Math.ceil(Math.random()*Item.MAX_SIZE) * Item.SIZE_MULTIPLIER + Item.SIZE_UNITS;
 				break
 			default:
-				this.style[dimension] = value * 5 + "vmax";
+				this.style[dimension] = value * Item.SIZE_MULTIPLIER + Item.SIZE_UNITS;
 		}
 	}
 
@@ -84,11 +95,13 @@ function itemRightClick(e) {
 	e.preventDefault();
 	context.innerHTML = "";
 	for (const style of this.style) {
-		console.log(style, this.style[style]);
-		const el = document.createElement("check-box");
-		el.textContent = `${style}:`;
-		el.setAttribute("checked", true);
-		context.appendChild(el);
+		if (Item.DEFAULTS[style]) {
+			// console.log(style, this.style[style]);
+			const el = document.createElement("check-box");
+			el.textContent = `${style}:`;
+			el.setAttribute("checked", true);
+			context.appendChild(el);
+		}
 	}
 	let left = e.clientX;
 	let top = e.clientY;
