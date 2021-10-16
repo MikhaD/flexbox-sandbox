@@ -1,9 +1,10 @@
 class Item extends HTMLElement {
-	static SIZE_MULTIPLIER = 5;
-	static SIZE_UNITS = "vmax";
+	static DEFAULT_SIZE = 1;
+	static SIZE_MULTIPLIER = 10;
+	static SIZE_UNITS = "%";
 	static DEFAULTS = {
-		"width": `${Item.SIZE_MULTIPLIER}${Item.SIZE_UNITS}`,
-		"height": `${Item.SIZE_MULTIPLIER}${Item.SIZE_UNITS}`,
+		"width": `${Item.DEFAULT_SIZE * Item.SIZE_MULTIPLIER}${Item.SIZE_UNITS}`,
+		"height": `${Item.DEFAULT_SIZE * Item.SIZE_MULTIPLIER}${Item.SIZE_UNITS}`,
 		"order": "0",
 		"flex-grow": "0",
 		"flex-shrink": "1",
@@ -22,17 +23,17 @@ class Item extends HTMLElement {
 		Item.hue += Item.HUE_INC;
 		this.addEventListener("click", itemClick);
 		this.addEventListener("contextmenu", itemRightClick);
-		this.setDimension("width", 1);
-		this.setDimension("height", 1);
+		this.setDimension("width", Item.DEFAULT_SIZE);
+		this.setDimension("height", Item.DEFAULT_SIZE);
 		this.n = ++Item.instances;
 	}
 
 	setStyle(style, value) {
 		if (style === "width" || style === "height") {
-			this.setDimension(style, value);
-		} else {
-			this.style[style] = value;
+			return this.setDimension(style, value);
 		}
+		this.style[style] = value;
+		return value;
 	}
 
 	setDimension(dimension, value) {
@@ -46,6 +47,7 @@ class Item extends HTMLElement {
 			default:
 				this.style[dimension] = value * Item.SIZE_MULTIPLIER + Item.SIZE_UNITS;
 		}
+		return this.style[dimension];
 	}
 
 	remove() {
@@ -97,8 +99,7 @@ function itemRightClick(e) {
 	for (const style of this.style) {
 		if (Item.DEFAULTS[style]) {
 			// console.log(style, this.style[style]);
-			const el = document.createElement("check-box");
-			el.textContent = `${style}:`;
+			const el = new CheckBox(this, style, this.style[style]);
 			el.setAttribute("checked", true);
 			context.appendChild(el);
 		}
@@ -106,8 +107,7 @@ function itemRightClick(e) {
 	let left = e.clientX;
 	let top = e.clientY;
 	context.style = "";
-	context.classList.add("invisible");
-	context.classList.remove("hidden");
+	context.classList.remove("invisible");
 	if (left > (window.innerWidth / 2)) {
 		left -= context.getBoundingClientRect().width;
 	}
@@ -116,7 +116,6 @@ function itemRightClick(e) {
 	}
 	context.style["left"] = `${left}px`;
 	context.style["top"] = `${top}px`;
-	context.classList.remove("invisible");
 }
 
 window.customElements.define("flex-item", Item);

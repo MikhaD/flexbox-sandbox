@@ -2,8 +2,6 @@
 const sandbox = document.querySelector("#sandbox");
 const context = document.querySelector("#context");
 const boxes = document.querySelector("input[name='boxes']");
-const inputs = document.querySelectorAll("input");
-const selects = document.querySelectorAll("select");
 //info ########################################### Event Listeners ###########################################
 document.querySelector("#reset").addEventListener("click", reset);
 
@@ -14,10 +12,10 @@ document.querySelector(".controls").addEventListener("click", e => {
 });
 
 boxes.addEventListener("change", function() {
-	if (this.value > 20 || this.value < 1 || isNaN(this.value)) {
+	if (isNaN(this.value) || parseInt(this.value) > 20 || parseInt(this.value) < 1) {
 		this.value = sandbox.prev;
 	} else {
-		if (this.value > sandbox.prev) {
+		if (parseInt(this.value) > parseInt(sandbox.prev)) {
 			for (let i = sandbox.prev; i < this.value; ++i) {
 				sandbox.addItem();
 			}
@@ -26,7 +24,7 @@ boxes.addEventListener("change", function() {
 				sandbox.removeItem();
 			}
 		}
-		sandbox.prev = this.value;
+		sandbox.prev = parseInt(this.value);
 	}
 });
 
@@ -42,34 +40,27 @@ window.addEventListener("keydown", e => {
 
 document.addEventListener("click", e => {
 	if (e.target.nodeName !== "CHECK-BOX") {
-		context.classList.add("hidden");
+		context.classList.add("invisible");
 	}
 });
 
 document.addEventListener("contextmenu", e => {
 	if (e.target.nodeName !== "FLEX-ITEM") {
-		context.classList.add("hidden");
+		context.classList.add("invisible");
 	}
 });
 
 //info ############################################## Functions ##############################################
 /**
- * Reset all the inputs and the sandbox
+ * Reset the sandbox and the values of the sandbox controls
  */
- function reset() {
-	for (const input of inputs) {
-		input.value = input.getAttribute("initial");
-	}
-	sandbox.prev = Sandbox.DEFUALT_BOX_COUNT;
-	for (const select of selects) {
-		if (select.children[0]) {
-			select.value = select.children[0].value;
-		}
-	}
+function reset() {
+	sandbox.controls.forEach(control => control.reset());
+	boxes.value = Sandbox.DEFAULTS.boxes;
+	sandbox.prev = parseInt(Sandbox.DEFAULTS.boxes);
 	sandbox.style = "";
-	sandbox.rePopulate(Sandbox.DEFUALT_BOX_COUNT);
+	sandbox.rePopulate(Sandbox.DEFAULTS.boxes);
 }
 
 //info ########################################### Run on page load ##########################################
-boxes.setAttribute("initial", Sandbox.DEFUALT_BOX_COUNT);
 reset();

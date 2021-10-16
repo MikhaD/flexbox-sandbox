@@ -61,7 +61,8 @@
 			<article>
 				<h3>
 					flex-wrap
-					<span class="info" title="flex-flow: <direction> <wrap>; is shorthand to set flex-direction and flex-wrap simultaneously">?</span>
+					<span class="info"
+						title="flex-flow: <direction> <wrap>; is shorthand to set flex-direction and flex-wrap simultaneously">?</span>
 				</h3>
 				<select for="sandbox" name="flex-wrap">
 					<option value="nowrap">nowrap</option>
@@ -91,7 +92,7 @@
 			</article>
 			<article>
 				<h3>gap</h3>
-				<input for="sandbox" type="number" name="gap" initial="0" min="0" max="10">
+				<input for="sandbox" type="number" name="gap" min="0" max="10">
 			</article>
 		</article>
 		<div id="select-hint">
@@ -102,44 +103,45 @@
 		<article id="item-controls" class="hidden control-group">
 			<article>
 				<h3>width</h3>
-				<select for="sandbox-item" name="width" initial="1">
+				<select for="sandbox-item" name="width">
+					<option value="unset">unset</option>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
 					<option value="4">4</option>
 					<option value="5">5</option>
-					<option value="unset">unset</option>
 					<option value="random">random</option>
 				</select>
 			</article>
 			<article>
 				<h3>height</h3>
-				<select for="sandbox-item" name="height" inital="1">
+				<select for="sandbox-item" name="height">
+					<option value="unset">unset</option>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
 					<option value="4">4</option>
 					<option value="5">5</option>
-					<option value="unset">unset</option>
 					<option value="random">random</option>
 				</select>
 			</article>
 			<article>
 				<h3>order</h3>
-				<input for="sandbox-item" type="number" initial="0" name="order" min="-20" max="20">
+				<input for="sandbox-item" type="number" name="order" min="-20" max="20">
 			</article>
 			<article>
 				<h3>flex-grow</h3>
-				<input for="sandbox-item" type="number" initial="0" name="flex-grow" min="0" max="20">
+				<input for="sandbox-item" type="number" name="flex-grow" min="0" max="20">
 			</article>
 			<article>
 				<h3>flex-shrink</h3>
-				<input for="sandbox-item" type="number" initial="1" name="flex-shrink" min="0" max="20">
+				<input for="sandbox-item" type="number" name="flex-shrink" min="0" max="20">
 			</article>
 			<article>
 				<h3>
 					flex-basis
-					<span class="info" title="flex: <grow> <shrink> <basis>; is shorthand to set flex-grow, flex-shrink and flex-basis simultaneously">?</span>
+					<span class="info"
+						title="flex: <grow> <shrink> <basis>; is shorthand to set flex-grow, flex-shrink and flex-basis simultaneously">?</span>
 				</h3>
 				<select for="sandbox-item" name="flex-basis">
 					<option value="auto">auto</option>
@@ -174,8 +176,7 @@
 		<theme-toggle></theme-toggle>
 	</section>
 </body>
+
 </html>
 <div id="context" class="invisible">
 </div>
-
-

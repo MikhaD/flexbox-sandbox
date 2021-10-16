@@ -40,9 +40,13 @@ class CheckBox extends HTMLElement {
 		return t;
 	})();
 
-	constructor() {
+	constructor(item, property, value) {
 		super();
+		this.item = item;
+		this.property = property;
+		this.value = value;
 		this.attachShadow({mode: "open"});
+		this.textContent = `${this.property}: ${this.value}`;
 	}
 	connectedCallback() {
 		this.shadowRoot.appendChild(CheckBox.template.content.cloneNode(true));
@@ -60,6 +64,11 @@ class CheckBox extends HTMLElement {
 			} else {
 				this.setAttribute("checked", true);
 				check.classList.remove("hidden");
+			}
+			if (this.getAttribute("checked") == "true") {
+				this.item.style[this.property] = this.value;
+			} else {
+				this.item.style[this.property] = null;
 			}
 		});
 	}
