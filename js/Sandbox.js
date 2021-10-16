@@ -163,14 +163,14 @@ class Sandbox extends HTMLElement {
 	}
 
 	mergeItemControlValues(item) {
+		let first = false;
+		if (Object.keys(this.selectedItems).length === 1) {
+			this.itemControlValues = {...Item.DEFAULTS};
+			first = true;
+		}
 		for (const style of item.style) {
-			if (Item.DEFAULTS[style] !== undefined) {
-				if (this.itemControlValues[style] === undefined) {
-					this.itemControlValues[style] = item.style[style];
-				} else if (this.itemControlValues[style] !== item.style[style]) {
-					console.log("Should be getting this message");
-					this.itemControlValues[style] = null;
-				}
+			if (this.itemControlValues[style] !== item.style[style] && Item.DEFAULTS[style] !== undefined) {
+				this.itemControlValues[style] = (first) ? item.style[style] : null;
 			}
 		}
 	}
@@ -187,6 +187,7 @@ class Sandbox extends HTMLElement {
 					val = val.slice(0, Item.SIZE_UNITS.length*-1)/Item.SIZE_MULTIPLIER;
 				}
 				control.value = val;
+				control.prev = val;
 			}
 		}
 	}
