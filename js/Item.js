@@ -16,6 +16,10 @@ class Item extends HTMLElement {
 	static hue = 0;
 	static instances = 0;
 
+	/**
+	 * Create a new Item in a given sandbox
+	 * @param {Sandbox} sandbox - The items parent Sandbox
+	 */
 	constructor(sandbox) {
 		super();
 		this.sandbox = sandbox;
@@ -28,6 +32,12 @@ class Item extends HTMLElement {
 		this.n = ++Item.instances;
 	}
 
+	/**
+	 * Set the given style to the given value, with units if necessary, and return the value.
+	 * @param {string} style - The style to set
+	 * @param {string} value - The value to set the style to
+	 * @returns the final value the style was set to.
+	 */
 	setStyle(style, value) {
 		if (style === "width" || style === "height") {
 			return this.setDimension(style, value);
@@ -36,6 +46,12 @@ class Item extends HTMLElement {
 		return value;
 	}
 
+	/**
+	 * Set the items width or height to the given value * the size multiplier in the relevant units, or to random or unset
+	 * @param {"width" | "height"} dimension - width or height
+	 * @param {string} value - The size value
+	 * @returns the final dimension value
+	 */
 	setDimension(dimension, value) {
 		switch (value) {
 			case "unset":
@@ -50,6 +66,7 @@ class Item extends HTMLElement {
 		return this.style[dimension];
 	}
 
+	/** Remove item */
 	remove() {
 		--Item.instances;
 		Item.hue -= Item.HUE_INC;

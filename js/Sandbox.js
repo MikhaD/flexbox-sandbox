@@ -170,6 +170,12 @@ class Sandbox extends HTMLElement {
 		}
 	}
 
+	/**
+	 * Merge the styles of a given item with the existing itemControlValues, replacing conflicts with null.
+	 * itemControlValues starts as the defaults, and the first item replaces the defaults with the relevant 
+	 * properties it contains.
+	 * @param {Item} item The item to merge the properties of
+	 */
 	mergeItemControlValues(item) {
 		let first = false;
 		if (Object.keys(this.selectedItems).length === 1) {
@@ -183,6 +189,10 @@ class Sandbox extends HTMLElement {
 		}
 	}
 
+	/**
+	 * Set the item control input values to the relevant values in the given values object.
+	 * @param {Object} values An object containing key value pairs of item control names and values
+	 */
 	setItemControls(values) {
 		for (const control of this.itemControls) {
 			let val = values[control.name];

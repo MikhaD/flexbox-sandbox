@@ -40,6 +40,12 @@ class CheckBox extends HTMLElement {
 		return t;
 	})();
 
+	/**
+	 * Create a new checkbox object for a css property in a context menu, with a label in the form `property: value`
+	 * @param {Item} item The item in the sandbox that the checkbox applies to
+	 * @param {string} property The css property the checkbox represents
+	 * @param {string} value The value of the css property
+	 */
 	constructor(item, property, value) {
 		super();
 		this.item = item;
@@ -55,20 +61,19 @@ class CheckBox extends HTMLElement {
 
 		if (this.getAttribute("checked") === null) {
 			this.setAttribute("checked", false);
-			check.classList.add("hidden");
+			check.style.display = "none";
 		}
 		this.shadowRoot.querySelector("#container").addEventListener("click", e => {
 			if (this.getAttribute("checked") == "true") {
 				this.setAttribute("checked", false);
-				check.classList.add("hidden");
+				check.style.display = "none";
+				// Remove the style from the relevant item
+				this.item.style[this.property] = null;
 			} else {
 				this.setAttribute("checked", true);
-				check.classList.remove("hidden");
-			}
-			if (this.getAttribute("checked") == "true") {
+				check.style.display = null;
+				// Apply the style to the relevant item
 				this.item.style[this.property] = this.value;
-			} else {
-				this.item.style[this.property] = null;
 			}
 		});
 	}
