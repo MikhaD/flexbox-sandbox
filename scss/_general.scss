@@ -23,18 +23,17 @@
 
 body {
 	min-height: 100vh;
-	padding: 2.5vmin;
+	padding: 2vmin;
 	display: grid;
-	gap: 1rem;
-	grid-template-columns: 100vmin 1fr;
+	gap: 2rem;
+	grid-template-columns: 90vmin 1fr;
 	background-color: var(--primary-background);
 }
 
-/* ############################################# Theme toggle ############################################# */
+.hidden {
+	display: none !important;
+}
 
-theme-toggle {
-	margin-top: auto;
-	&::part(circle) {
-		background-color: teal;
-	}
+.invisible {
+	visibility: hidden !important;
 }

@@ -1,0 +1,24 @@
+#context {
+	position: absolute;
+	background-color: var(--primary-background);
+	z-index: 1;
+	border: solid 1px var(--foreground);
+	border-radius: var(--border-radius);
+	overflow: hidden;
+}
+
+check-box {
+	&::part(container):hover {
+		background-color: var(--secondary-background);
+	}
+	&::part(check) {
+		color: var(--standard-button);
+	}
+	&::part(box) {
+		border: var(--input-border);
+		background: var(--secondary-background);
+	}
+	&::part(label) {
+		font-family: 'Courier New', Courier, monospace;
+	}
+}

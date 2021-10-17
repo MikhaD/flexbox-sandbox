@@ -21,12 +21,13 @@ sand-box {
 
 .selected {
 	scale: 0.9;
+	border-radius: 1rem;
 }
 
 flex-item {
 	z-index: 1;
 	cursor: pointer;
-	transition: scale 0.1s ease;
+	transition: scale 0.1s ease, border-radius 0.1s ease;
 	&:hover {
 		@extend .selected;
 	}
