@@ -15,7 +15,7 @@ class Sandbox extends HTMLElement {
 		/** The number of boxes there were prior to the latest change in the number of boxes */
 		this.prev = Sandbox.DEFAULTS.boxes;
 		this.items = [];
-		this.selectedItems = {};
+		this.selectedItems = new Map();
 		this.shiftStartItem = null;
 		this.controls = document.querySelectorAll(`[for='${this.id}']`);
 		this.itemControlSet = document.querySelector("#item-controls");
@@ -51,9 +51,9 @@ class Sandbox extends HTMLElement {
 				if (e.currentTarget.nodeName === "INPUT" && (isNaN(val) || val < parseInt(e.currentTarget.min) || val > parseInt(e.currentTarget.max))) {
 					e.currentTarget.value = e.currentTarget.prev;
 				} else {
-					for (const n in this.selectedItems) {
+					for (const item of this.selectedItems.values()) {
 						this.itemControlValues[e.currentTarget.name] = 
-							this.selectedItems[n].setStyle(e.currentTarget.name, e.currentTarget.value);
+							item.setStyle(e.currentTarget.name, e.currentTarget.value);
 					}
 					e.currentTarget.prev = val;
 				}
@@ -75,7 +75,6 @@ class Sandbox extends HTMLElement {
 	removeItem() {
 		const item = this.items.pop();
 		this.deselectItem(item);
-		// delete this.selectedItems[item.n];
 		if (this.shiftStartItem === item) {
 			this.shiftStartItem = null;
 		}
@@ -108,7 +107,7 @@ class Sandbox extends HTMLElement {
 	 */
 	selectItem(item) {
 		item.classList.add("selected");
-		this.selectedItems[item.n] = item;
+		this.selectedItems.set(item.n, item);
 
 		this.mergeItemControlValues(item);
 		this.setItemControls(this.itemControlValues);
@@ -121,19 +120,20 @@ class Sandbox extends HTMLElement {
 	 */
 	deselectItem(item, updateControlValues) {
 		item.classList.remove("selected");
-		delete this.selectedItems[item.n];
+		this.selectedItems.delete(item.n);
 
-		if (Object.keys(this.selectedItems).length === 0) {
+		if (this.selectedItems.size === 0) {
 			this.toggleItemControls(false);
 		} else if (updateControlValues !== false) {
-			const selectedItems = Object.values(this.selectedItems);
+			const selectedItems = this.selectedItems.values();
 			//! WHAT IF THERE ARE NO SELECTED ITEMS (Don't think it is possible to call when there isn't an item selected)
 			this.itemControlValues = {...Item.DEFAULTS};
-			for (const style of selectedItems[0].style) {
-				this.itemControlValues[style] = selectedItems[0].style[style];
+			const baseItem = selectedItems.next().value;
+			for (const style of baseItem.style) {
+				this.itemControlValues[style] = baseItem.style[style];
 			}
 
-			for (const item of selectedItems.slice(1)) {
+			for (const item of selectedItems) {
 				this.mergeItemControlValues(item);
 			}
 			this.setItemControls(this.itemControlValues);
@@ -151,8 +151,8 @@ class Sandbox extends HTMLElement {
 	 * Reset all selected items in the sandbox
 	 */
 	deselectAllItems() {
-		for (const key in this.selectedItems) {
-			this.deselectItem(this.selectedItems[key], false);
+		for (const item of this.selectedItems.values()) {
+			this.deselectItem(item, false);
 		}
 		this.shiftStartItem = null;
 	}
@@ -178,7 +178,7 @@ class Sandbox extends HTMLElement {
 	 */
 	mergeItemControlValues(item) {
 		let first = false;
-		if (Object.keys(this.selectedItems).length === 1) {
+		if (this.selectedItems.size === 1) {
 			this.itemControlValues = {...Item.DEFAULTS};
 			first = true;
 		}
