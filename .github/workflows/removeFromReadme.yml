@@ -6,7 +6,7 @@ on:
 
 jobs:
   update-readme:
-    if: github.event.label.name == "enhancement"  # Might not work on closed and deleted events
+    # if: github.event.label.name == "enhancement"  # Might not work on closed and deleted events
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
