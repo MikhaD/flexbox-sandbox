@@ -6,14 +6,14 @@ on:
 
 jobs:
   update-readme:
-    if: github.event.label.name == 'enhancement'  # Might not work on reopened event
+    # if: github.event.label.name == 'enhancement'  # Might not work on reopened event
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       # - name: Add to Readme
       - name: print label object
-        uses: echo ${{ github.event.label }}
+        uses: echo ${{ github.event.label.name }}
   comment-issue:
     needs: update-readme
     runs-on: ubuntu-latest
