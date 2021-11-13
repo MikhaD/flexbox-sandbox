@@ -1,5 +1,5 @@
 # Flexbox Sandbox
-An interactive *"sandbox"* for playing around with css flexbox properties without having to write any code to help people quickly figure out flexbox layouts and understand the function and effects of the various flex properties and their values.
+An interactive *"sandbox"* for playing around with [css flexbox](developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox) properties without having to write any code to help people quickly figure out flexbox layouts and understand the function and effects of the various flex properties and their values.
 
 ## Usage
 To use flexbox sandbox simply got to [the page](mikhad.github.io/flexbox-sandbox) and start playing around.

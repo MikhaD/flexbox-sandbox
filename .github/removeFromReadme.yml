@@ -1,0 +1,27 @@
+name: Remove Feature from Upcoming on README
+
+on:
+  issues:
+    types: [unlabeled, closed, deleted]
+
+jobs:
+  update-readme:
+    if: github.event.label.name == "enhancement"  # Might not work on closed and deleted events
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      # - name: Add to Readme
+      - name: print issue object
+        run: echo ${{ github.event.issue }}
+  comment-issue:
+    needs: update-readme
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Comment on Issue
+        uses: peter-evans/create-or-update-comment@v1
+          with:
+            issue-number: ${{ github.event.issue.number }}
+            body: This has been removed from the list of upcoming features.
