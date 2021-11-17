@@ -9,11 +9,6 @@ jobs:
     if: "(github.event.action == 'unlabeled' && github.event.label.name == 'enhancement') || (contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))"
     runs-on: ubuntu-latest
     steps:
-      - name: printing conditional
-        run: "echo ${{ contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"') }}"
-
-      - name: labels contain enhancements
-        run: "echo ${{ contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"') }}"
     # - name: Checkout
     #   uses: actions/checkout@v2
 
