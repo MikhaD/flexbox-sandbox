@@ -8,11 +8,16 @@ jobs:
   update-readme:
     # if: >
     #   (github.event.action == 'unlabeled' && github.event.label.name == 'enhancement') || 
-    #   (contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))
+      # (contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))
     runs-on: ubuntu-latest
     steps:
-      - name: checking conditional
+      - name: printing conditional
         run: "echo ${{ contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"') }}"
+
+      - name: testing conditional
+        if: >
+          (contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))
+        run: echo "how is this working?"
 
       - name: labels contain enhancements
         run: "echo ${{ contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"') }}"
