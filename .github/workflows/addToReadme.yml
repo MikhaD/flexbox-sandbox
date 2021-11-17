@@ -6,7 +6,12 @@ on:
 
 jobs:
   update-readme:
-    if: "(github.event.action == 'labeled' && github.event.label.name == 'enhancement' && github.event.issue.closed_at == '') || (github.event.action == 'reopened' && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))"
+    if: |
+      "(github.event.action == 'labeled' && 
+      github.event.label.name == 'enhancement' && 
+      github.event.issue.closed_at == '') || 
+      (github.event.action == 'reopened' && 
+      contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))"
     runs-on: ubuntu-latest
     steps:
       # - name: Checkout
