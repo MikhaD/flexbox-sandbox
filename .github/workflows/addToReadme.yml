@@ -6,16 +6,14 @@ on:
 
 jobs:
   update-readme:
-    if: >
-      (github.event.action == 'labeled' && github.event.label.name == 'enhancement') || 
-      (github.event.action == 'reopened' && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))
+    # if: >
+    #   (github.event.action == 'labeled' && github.event.label.name == 'enhancement') || 
+    #   (github.event.action == 'reopened' && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))
     runs-on: ubuntu-latest
     steps:
-      - name: is reopened
-        run: echo ${{ github.event.action == 'reopened' }}
+      - name: checking conditional
+        run: "echo ${{ github.event.action == 'reopened' && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"') }}"
 
-      - name: labels contain enhancements
-        run: "echo ${{ contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"') }}"
       # - name: Checkout
       #   uses: actions/checkout@v2
 
