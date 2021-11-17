@@ -1,4 +1,4 @@
-name: Add Feature to Upcoming on README
+name: Remove Feature from Upcoming on README
 
 on:
   issues:
@@ -6,9 +6,9 @@ on:
 
 jobs:
   update-readme:
-    # if: >
-    #   (github.event.action == 'unlabeled' && github.event.label.name == 'enhancement') || 
-    #   ( contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))
+    if: >
+      (github.event.action == 'unlabeled' && github.event.label.name == 'enhancement') || 
+      ( contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))
     runs-on: ubuntu-latest
     steps:
       - name: is closed or deleted
