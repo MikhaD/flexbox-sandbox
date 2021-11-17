@@ -11,13 +11,13 @@ jobs:
     #   ( contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))
     runs-on: ubuntu-latest
     steps:
-        - name: closed or deleted
-          run: echo ${{ contains('closed, deleted', github.event.action) }}
+      - name: is closed or deleted
+        run: echo ${{ contains('closed, deleted', github.event.action) }}
 
-        - name: labels contain enhancements
-          run: "echo ${{ contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"')) }}"
-      # - name: Checkout
-      #   uses: actions/checkout@v2
+      - name: labels contain enhancements
+        run: "echo ${{ contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"') }}"
+    # - name: Checkout
+    #   uses: actions/checkout@v2
 
       - name: Add to Readme
         run: echo "Haven't written the action to do this yet"
