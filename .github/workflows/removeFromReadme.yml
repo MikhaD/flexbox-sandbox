@@ -15,8 +15,7 @@ jobs:
         run: "echo ${{ contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"') }}"
 
       - name: testing conditional
-        if: >
-          (contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))
+        if: "(contains('closed, deleted', github.event.action) && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))"
         run: echo "how is this working?"
 
       - name: labels contain enhancements
