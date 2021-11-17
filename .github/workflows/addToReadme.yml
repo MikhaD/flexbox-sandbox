@@ -6,20 +6,17 @@ on:
 
 jobs:
   update-readme:
-    if: github.event.label.name == 'enhancement'  # Might not work on reopened event
+    if: >
+      (github.event.action == 'labeled' && github.event.label.name == 'enhancement') || 
+      (github.event.action == 'reopened' && contains(toJSON(github.event.issue.labels), '\"name\": \"enhancement\"'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      # - name: Add to Readme
-      - name: print label object
-        run: echo ${{ github.event.label.name }}
-  comment-issue:
-    needs: update-readme
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+
+      - name: Add to Readme
+        run: echo "Haven't written the action to do this yet"
+
       - name: Comment on Issue
         uses: peter-evans/create-or-update-comment@v1
         with:
