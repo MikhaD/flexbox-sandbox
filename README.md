@@ -6,7 +6,7 @@ To use flexbox sandbox simply got to [the page](mikhad.github.io/flexbox-sandbox
 
 ## Upcoming features
 - Additional info about each flexbox property (#2)
-- Safe/unsafe toggle for alignment properties when neccessary (#8)
+- Safe/unsafe toggle for alignment properties when necessary (#8)
 - Width and height 100% options (#9)
 - More complex property values for size options (#12)
 - Apply combined styles of selected items to new items created (#13)

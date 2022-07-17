@@ -16,6 +16,7 @@ jobs:
         run: echo "Haven't written the action to do this yet"
 
       - name: Comment on Issue
+        if: github.event.action != 'deleted'
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}

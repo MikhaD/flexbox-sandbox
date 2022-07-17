@@ -38,6 +38,8 @@ window.addEventListener("keydown", e => {
 	// }
 });
 
+document.querySelector("#select-all").addEventListener("click", () => sandbox.selectAllItems());
+
 document.addEventListener("click", e => {
 	if (e.target.nodeName !== "CHECK-BOX") {
 		context.classList.add("invisible");
